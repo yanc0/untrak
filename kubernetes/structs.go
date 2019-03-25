@@ -3,12 +3,13 @@ package kubernetes
 import (
 	"fmt"
 )
-
+// Metadata of kubernetes resource
 type Metadata struct {
 	Name      string `yaml:"name"`
 	Namespace string `yaml:"namespace"`
 }
 
+// Resource is a minimal description of a kubernetes object
 type Resource struct {
 	APIVersion string      `yaml:"apiVersion"`
 	Kind       string      `yaml:"kind"`
