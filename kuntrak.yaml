@@ -1,0 +1,19 @@
+---
+# Kuntrack configuration
+# All commands must produce YAML output on stdout
+###
+
+# Kubernetes resources from your versionned controlled configuration
+in:
+- cmd: "cat"
+  args: ["example/manifests/resources.yaml"]
+
+# Kubernetes resources on your cluster
+out:
+- cmd: "kubectl"
+  args: ["get", "cm,deploy,svc,ing", "-o", "yaml", "-n", "api"]
+
+exclude:
+- namespace
+- secret
+- configmap
