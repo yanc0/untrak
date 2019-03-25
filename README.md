@@ -1,6 +1,8 @@
 # Untrak
 Find untracked resources in Kubernetes cluster, garbage collect them.
 
+[![Build Status](https://travis-ci.org/yanc0/untrak.svg?branch=master)](https://travis-ci.org/yanc0/untrak)
+
 ## Why?
 
 When you use `kubectl apply`, `kustomize build` or `helm template` for injecting manifests through you CI/CD pipeline, kubernetes don't know when an object has been deleted from you repo. Your resources are now **untracked** from your delivery process and they are still managed by your clusters.
