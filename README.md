@@ -3,7 +3,7 @@ Find untracked resources in Kubernetes cluster, garbage collect them.
 
 ## Why?
 
-When you use `kubectl apply`, `kustomize build` or `helm template` for injecting manifests through you CI/CD pipeline, kubernetes don't know when an object has been deleted from you repo. Your resources are now **untracked** from your delivery process and they are still managed by your clusters.
+When you use `kubectl apply`, `kustomize build` or `helm template` for injecting manifests through you CI/CD pipeline, kubernetes doesn't know when an object has been deleted from your repo. Your resources are now **untracked** from your delivery process and they are still managed by your clusters.
 
 Untrak is a tool made for finding and deleting these untracked files on your cluster.
 
@@ -36,7 +36,7 @@ out:
 exclude:
 - namespace
 ```
-To show untracked resources in you cluster (out) simply launch `untrak` like so:
+To show untracked resources in your cluster (out) simply launch `untrak` like so:
 
 ```
 $ untrak -c untrak.yaml -o text
