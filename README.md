@@ -16,6 +16,14 @@ Via a simple config file (`untrak.yaml`), this tool will internally execute comm
 
 In a GitOps context, this is the tool you always dreamed of.
 
+## Installation
+
+Download latest version on [releases page](https://github.com/yanc0/untrak/releases)
+
+- `chmod +x untrak`
+- `sudo mv untrak /usr/loca/bin`
+- `untrak --help`
+
 ## Example
 
 Put a `untrak.yaml` file in you SCM.
