@@ -2,7 +2,7 @@ package main
 
 import (
 	"flag"
-	"fmt"
+	"log"
 	"os"
 	"strings"
 	"sync"
@@ -29,7 +29,7 @@ func main() {
 	// Config Load
 	cfg, err := config.Load(*cfgPathOpt)
 	if err != nil {
-		fmt.Printf("[ERR] Cannot load %s file: %v\n", *cfgPathOpt, err)
+		log.Printf("[ERR] Cannot load %s file: %v\n", *cfgPathOpt, err)
 		os.Exit(1)
 	}
 
@@ -38,7 +38,7 @@ func main() {
 		defer wg.Done()
 		resourcesIn, err = getKubernetesResources(cfg.In)
 		if err != nil {
-			fmt.Printf("[ERR] Failed to get Kubernetes resources (in): %v\n", err)
+			log.Printf("[ERR] Failed to get Kubernetes resources (in): %v\n", err)
 			os.Exit(1)
 		}
 	}()
@@ -48,7 +48,7 @@ func main() {
 		defer wg.Done()
 		resourcesOut, err = getKubernetesResources(cfg.Out)
 		if err != nil {
-			fmt.Printf("[ERR] Failed to get Kubernetes resources (out): %v\n", err)
+			log.Printf("[ERR] Failed to get Kubernetes resources (out): %v\n", err)
 			os.Exit(1)
 		}
 	}()
@@ -79,9 +79,9 @@ func getKubernetesResources(cfgs []*config.CommandConfig) ([]*kubernetes.Resourc
 			defer wg.Done()
 			stdout, stderr, err := utils.Exec(cmd, args...)
 			if err != nil {
-				fmt.Println(cmd, args)
-				fmt.Println(string(stderr))
-				fmt.Println(err)
+				log.Println(cmd, args)
+				log.Println(string(stderr))
+				log.Println(err)
 				os.Exit(1)
 			}
 
@@ -90,7 +90,7 @@ func getKubernetesResources(cfgs []*config.CommandConfig) ([]*kubernetes.Resourc
 
 				yaml.Unmarshal([]byte(yml), &resource)
 				if err != nil {
-					fmt.Println(err)
+					log.Println(err)
 					os.Exit(1)
 				}
 
