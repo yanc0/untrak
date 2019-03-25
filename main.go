@@ -7,18 +7,18 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/yanc0/kuntrak/outputs"
-	"github.com/yanc0/kuntrak/utils"
+	"github.com/yanc0/untrak/outputs"
+	"github.com/yanc0/untrak/utils"
 	yaml "gopkg.in/yaml.v2"
 
-	"github.com/yanc0/kuntrak/kubernetes"
+	"github.com/yanc0/untrak/kubernetes"
 
-	"github.com/yanc0/kuntrak/config"
+	"github.com/yanc0/untrak/config"
 )
 
 func main() {
 	// Flags, command line parameters
-	var cfgPathOpt = flag.String("config", "./kuntrak.yaml", "Kuntrak Config Path")
+	var cfgPathOpt = flag.String("config", "./untrak.yaml", "untrak Config Path")
 	var outputOpt = flag.String("o", "text", "Output format")
 	flag.Parse()
 

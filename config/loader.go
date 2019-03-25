@@ -6,7 +6,7 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-// Load Kuntrak config from path
+// Load untrak config from path
 func Load(path string) (*Config, error) {
 	var cfg Config
 

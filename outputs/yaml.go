@@ -3,7 +3,7 @@ package outputs
 import (
 	"fmt"
 
-	"github.com/yanc0/kuntrak/kubernetes"
+	"github.com/yanc0/untrak/kubernetes"
 	yaml "gopkg.in/yaml.v2"
 )
 
