@@ -1,0 +1,12 @@
+language: go
+go:
+- 1.x
+script: go build
+deploy:
+  provider: releases
+  api_key:
+    secure: RiTo8+IMBcIzZzqSJuHjrEoGZ4QaIiQe/gMrGfopqU6bIT6cmtl4uAoW1dktDI8p4kvpDkRZXLsLDi7QJg1DdxUllWgf11daWW5w4snad5cnQFgbKneYjc3+mMB2JJdn/kjYe8Lu17Yec5cLrA/wf5tMHEwqmN5FR6n4GxEIF6SMmBtHiXr0CtKxZQOY5wiytY2afWg6SPc5P/I6kHYJGmZArtLcWPuYwHCW055xMbgQGZaNWl0CdShWNLyiTUGOnXTz/zoPLKT1cZAwXn/ocOCNHlln9w5tfD4qRkW/lVw16+viNb5fbVPBs02JzvGyep52pGZZpzt5yXya5UJa1bo0L/rN9qzFXtsGlQqzC+n+pvd1qKVqmH9YZ3DQTolcrvsXvAFm5l0bIs/pgRD7CGMUaebaBvRM/TEVSf9yH/5yyWnxbOJXtKZNl4aiGEXLBp3oJRp7GeraEYPYr8/Yd74obxAoee01YVjxzMITv1qvL6FlMJYrDTs7mxyJpVVJn2ZBvVCG2yNW8j33PkKNBZ2W6DkH7Uk9WDd74DttSW4qyRUqvKiWwAZnfO0rylkobaYxurTIBjv3ZR4lMOKYDzrotc2GyYMq0bZYimz6BMuQzZYz9JlgxajvXIgTAlNe3svcZSVra2byZYqUb/pE1+SlpjcSPNECvycqb2IVfO0=
+  file: untrak
+  on:
+    repo: yanc0/untrak
+    tags: true
