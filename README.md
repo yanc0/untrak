@@ -23,7 +23,7 @@ In a GitOps context, this is the tool you always dreamed of.
 Download latest version on [releases page](https://github.com/yanc0/untrak/releases)
 
 - `chmod +x untrak`
-- `sudo mv untrak /usr/loca/bin`
+- `sudo mv untrak /usr/local/bin`
 - `untrak --help`
 
 ## Example
