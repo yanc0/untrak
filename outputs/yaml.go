@@ -17,5 +17,5 @@ func YAML(resources []*kubernetes.Resource) {
 		}
 		output += fmt.Sprintf("---\n%s\n", string(out))
 	}
-	fmt.Println(output)
+	fmt.Printf("%s", output)
 }

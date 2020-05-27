@@ -1,10 +1,12 @@
 package main
 
 import (
+	"bytes"
 	"flag"
+	"io"
 	"log"
 	"os"
-	"strings"
+	"os/exec"
 	"sync"
 
 	"github.com/yanc0/untrak/outputs"
@@ -77,40 +79,43 @@ func getKubernetesResources(cfgs []*config.CommandConfig) ([]*kubernetes.Resourc
 		wg.Add(1)
 		go func(cmd string, args ...string) {
 			defer wg.Done()
-			stdout, stderr, err := utils.Exec(cmd, args...)
+			c := exec.Command(cmd, args...)
+			var outb, errb bytes.Buffer
+			c.Stdout = &outb
+			c.Stderr = &errb
+			err := c.Run()
 			if err != nil {
-				log.Println(cmd, args)
-				log.Println(string(stderr))
-				log.Println(err)
-				os.Exit(1)
+				log.Fatal(err, errb.String())
 			}
-
-			for _, yml := range strings.Split(string(stdout), yamlSeparator) {
-				resource := kubernetes.Resource{}
-
-				yaml.Unmarshal([]byte(yml), &resource)
-				if err != nil {
-					log.Println(err)
+			stdoutDec := yaml.NewDecoder(&outb)
+			for {
+				tempResource := &kubernetes.Resource{}
+				err := stdoutDec.Decode(tempResource)
+				if err != nil && err != io.EOF {
+					log.Printf("[ERR] Failed to decode yaml stream: %s\n", err.Error())
 					os.Exit(1)
 				}
-
-				if resource.Empty() {
-					// Failed to ummarshal properly
+				if err == io.EOF {
+					break
+				}
+				if tempResource.Kind == "List" {
+					mutex.Lock()
+					resources = append(resources, tempResource.Items...)
+					mutex.Unlock()
 					continue
 				}
-				mutex.Lock()
-				// When 'kubectl get' is used, an object List is returned with
-				// all resources in items array
-				if resource.Kind == "List" && resource.Items != nil {
-					for _, item := range resource.Items {
-						resources = append(resources, item)
-					}
-				} else {
-					resources = append(resources, &resource)
+				// Resource can be empty if yaml file has return lines, separators or comments
+				// for example:
+				// # empty resource
+				// ---
+				// ---
+				// YAML decoder consider these lines valid but resource will be uninitialized
+				if !tempResource.Empty() {
+					mutex.Lock()
+					resources = append(resources, tempResource)
+					mutex.Unlock()
 				}
-				mutex.Unlock()
 			}
-
 		}(cfg.Cmd, cfg.Args...)
 	}
 	wg.Wait()
@@ -120,16 +125,19 @@ func getKubernetesResources(cfgs []*config.CommandConfig) ([]*kubernetes.Resourc
 func listUntrackedResources(in []*kubernetes.Resource, out []*kubernetes.Resource, kindExclude []string) []*kubernetes.Resource {
 	var untrackedResources []*kubernetes.Resource
 	for _, resourceOut := range out {
+		// Resource is in the exlude list, skip it
 		if utils.StringInListCaseInsensitive(kindExclude, resourceOut.Kind) {
 			continue
 		}
 		found := false
 		for _, resourceIn := range in {
+			// If resource has been found in both IN an OUT, there is nothing to do
 			if resourceOut.ID() == resourceIn.ID() {
 				found = true
 				break
 			}
 		}
+		// If resource OUT is not found in IN, it is untracked
 		if !found {
 			untrackedResources = append(untrackedResources, resourceOut)
 		}

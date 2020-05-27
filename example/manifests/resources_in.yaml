@@ -58,22 +58,3 @@ spec:
           periodSeconds: 5
           timeoutSeconds: 5
 ---
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  annotations:
-    kubernetes.io/ingress.class: nginx
-  labels:
-    app: django
-    env: dev
-  name: django
-  namespace: api
-spec:
-  rules:
-  - host: django.example.com
-    http:
-      paths:
-      - backend:
-          serviceName: django
-          servicePort: 80
-        path: /

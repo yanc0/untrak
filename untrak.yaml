@@ -1,18 +1,25 @@
 ---
-# Kuntrack configuration
-# All commands must produce YAML output on stdout
+# Untrak configuration
+# All commands must produce YAML output on stdout either as:
+#  - Kind: List - List Kubernetes resource type(from kubectl get stdout)
+#  - Concatenated YAML with "---" separator
 ###
 
 # Kubernetes resources from your versionned controlled configuration
 in:
 - cmd: "cat"
-  args: ["example/manifests/resources.yaml"]
+  args: ["example/manifests/resources_in.yaml"]
+out:
+- cmd: "cat"
+  args: ["example/manifests/resources_out.yaml"]
 
 # Kubernetes resources on your cluster
-out:
-- cmd: "kubectl"
-  args: ["get", "cm,deploy,svc,ing", "-o", "yaml", "-n", "api"]
+# check only configmaps, deployments, services and ingresses in api namespace
+# out:
+# - cmd: "kubectl"
+#   args: ["get", "cm,deploy,svc,ing", "-o", "yaml", "-n", "api"]
 
+# You can exclude some resource type from the comparison
 exclude:
 - namespace
 - secret

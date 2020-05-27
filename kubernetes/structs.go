@@ -3,6 +3,7 @@ package kubernetes
 import (
 	"fmt"
 )
+
 // Metadata of kubernetes resource
 type Metadata struct {
 	Name      string `yaml:"name"`
