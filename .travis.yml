@@ -1,7 +1,9 @@
 language: go
 go:
-- 1.x
-script: go build
+- 1.14.x
+script:
+  - go get -v -d ./... 
+  - go build
 deploy:
   provider: releases
   api_key:
