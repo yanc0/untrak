@@ -63,3 +63,4 @@ configmap "django-config-b4k42gm792" deleted
 configmap "django-config-g55mctg456" deleted
 ingress.extensions "my-ingress" deleted
 ```
+> **Caution**: please test this tool extensively before deleting resources. The software is provided "as is", without warranty of any kind.
