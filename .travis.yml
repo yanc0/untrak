@@ -2,13 +2,16 @@ language: go
 go:
 - 1.14.x
 script:
-  - go get -v -d ./... 
-  - go build
+  - go get -v -d ./...
+  - GOOS=linux GOARCH=amd64 go build -o untrak-linux
+  - GOOS=darwin GOARCH=amd64 go build -o untrak-darwin
 deploy:
   provider: releases
   api_key:
     secure: u76RGeXFqXOBTOiEFChuXS7C1aaLl7vX8J39hOyla22LAyIeSOmOK6atwMfz6zq3cui9wo/bQ6Mke3p5Fzm1bhvA1srLo+Ma59JYEzsMvyDE0A7OZG7W8S+iJYEn/rlLGBzjAozg0TlmOMh8s/H05TyUEVOOqFwlEyb/O4H4Zg/ooJdNv0A+MLYGqgCiyyDv2tuMzY6GNeiBLrR69iAJfEjkrOfzC+dnVKEHi9K6OV1UEWX/63VHd2SfvJmG9vOL++3QH05ToMP0Geuek0fvQ0c5EYjAZYW4d4zw3dxXsHLwN7GRjQuos0uGXGqeHaSkYfSbtDQhLNV3FRjXlp8r4fhjhHcWQm4GO5tZItMMWVFwA8S1v+aiZ4B2NwrewwOxRzyBqtYGV16yklkHngOwsbU3596TKQeWv9v7sCw7f1N+uoAYmbyf7Si95WZnvkdIW1DvADg/32+dOcsLOKWFo1wlkoA44O8qOUetfHFd9DDApvd1n6XfvsWkejOdk8X02R/1XB3fCFRxONegIsVXjhlodBS0AzoF398goDfiDtj9TCdOwHUMIGFGZ/SARJRFwkCNkzY46B1/P4yH/vzrxIsALAuPDGUjqfrERtpl289M/0SNz4j7hhDgVYq+BLzipErDMmT+3l+RRTR9rKcHWN2NNm2zkDNoNRVvyiZtpp0=
-  file: untrak
+  file:
+    - untrak-linux
+    - untrak-darwin
   skip_cleanup: true
   on:
     tags: true
