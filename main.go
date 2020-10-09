@@ -22,6 +22,7 @@ func main() {
 	// Flags, command line parameters
 	var cfgPathOpt = flag.String("config", "./untrak.yaml", "untrak Config Path")
 	var outputOpt = flag.String("o", "text", "Output format")
+	var failOpt = flag.Bool("fail", false, "Fail on untracked resources")
 	flag.Parse()
 
 	var wg sync.WaitGroup
@@ -65,6 +66,10 @@ func main() {
 		outputs.YAML(untrackedResources)
 	default:
 		outputs.Text(untrackedResources)
+	}
+
+	if len(untrackedResources) > 0 && *failOpt {
+		os.Exit(1)
 	}
 }
 
