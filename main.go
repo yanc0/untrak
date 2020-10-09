@@ -107,6 +107,12 @@ func getKubernetesResources(cfgs []*config.CommandConfig) ([]*kubernetes.Resourc
 		wg.Add(1)
 		go func(cmd string, args ...string) {
 			defer wg.Done()
+
+			// substitute env variables if any has been set
+			for i, _ := range args {
+				args[i] = os.ExpandEnv(args[i])
+			}
+
 			c := exec.Command(cmd, args...)
 			var outb, errb bytes.Buffer
 			c.Stdout = &outb
