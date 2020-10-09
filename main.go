@@ -57,7 +57,7 @@ func main() {
 
 	wg.Wait()
 
-	untrackedResources := listUntrackedResources(resourcesIn, resourcesOut, cfg.Exclude)
+	untrackedResources := listUntrackedResources(resourcesIn, resourcesOut, cfg.Exclude, cfg.NonNamespaced)
 	switch {
 	case *outputOpt == "text":
 		outputs.Text(untrackedResources)
@@ -122,7 +122,7 @@ func getKubernetesResources(cfgs []*config.CommandConfig) ([]*kubernetes.Resourc
 	return resources, nil
 }
 
-func listUntrackedResources(in []*kubernetes.Resource, out []*kubernetes.Resource, kindExclude []string) []*kubernetes.Resource {
+func listUntrackedResources(in []*kubernetes.Resource, out []*kubernetes.Resource, kindExclude []string, nonNamespaced []string) []*kubernetes.Resource {
 	var untrackedResources []*kubernetes.Resource
 	for _, resourceOut := range out {
 		// Resource is in the exlude list, skip it
@@ -131,6 +131,15 @@ func listUntrackedResources(in []*kubernetes.Resource, out []*kubernetes.Resourc
 		}
 		found := false
 		for _, resourceIn := range in {
+
+			// If input resource is not namespaced, compare only kind and Name
+			if utils.StringInListCaseInsensitive(nonNamespaced, resourceIn.Kind) {
+				if resourceOut.Kind == resourceIn.Kind && resourceOut.Metadata.Name == resourceIn.Metadata.Name {
+					found = true
+					break
+				}
+			}
+
 			// If resource has been found in both IN an OUT, there is nothing to do
 			if resourceOut.ID() == resourceIn.ID() {
 				found = true
