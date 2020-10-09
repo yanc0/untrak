@@ -18,6 +18,27 @@ import (
 	"github.com/yanc0/untrak/config"
 )
 
+var defaultNonNamespacedResources = []string{
+	"componentstatuse",
+	"namespace",
+	"node",
+	"persistentvolume",
+	"mutatingwebhookconfiguration",
+	"validatingwebhookconfiguration",
+	"customresourcedefinition",
+	"apiservice",
+	"certificatesigningrequest",
+	"runtimeclass",
+	"podsecuritypolicy",
+	"clusterrolebinding",
+	"clusterrole",
+	"priorityclass",
+	"csidriver",
+	"csinode",
+	"storageclass",
+	"volumeattachment",
+}
+
 func main() {
 	// Flags, command line parameters
 	var cfgPathOpt = flag.String("config", "./untrak.yaml", "untrak Config Path")
@@ -35,6 +56,8 @@ func main() {
 		log.Printf("[ERR] Cannot load %s file: %v\n", *cfgPathOpt, err)
 		os.Exit(1)
 	}
+
+	cfg.NonNamespaced = append(cfg.NonNamespaced, defaultNonNamespacedResources...)
 
 	wg.Add(1)
 	go func() {
