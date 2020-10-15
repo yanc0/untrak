@@ -24,3 +24,9 @@ exclude:
 - namespace
 - secret
 - configmap
+
+# Declare non-namespaced resource types to be considered in resource comparison.
+# There are some defined resource types by default by default like namespace,
+# node, clusterrole, etc.
+# nonNamespaced:
+# - some_crd_type
