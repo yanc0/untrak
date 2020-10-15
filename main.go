@@ -18,27 +18,6 @@ import (
 	"github.com/yanc0/untrak/config"
 )
 
-var defaultNonNamespacedResources = []string{
-	"componentstatuse",
-	"namespace",
-	"node",
-	"persistentvolume",
-	"mutatingwebhookconfiguration",
-	"validatingwebhookconfiguration",
-	"customresourcedefinition",
-	"apiservice",
-	"certificatesigningrequest",
-	"runtimeclass",
-	"podsecuritypolicy",
-	"clusterrolebinding",
-	"clusterrole",
-	"priorityclass",
-	"csidriver",
-	"csinode",
-	"storageclass",
-	"volumeattachment",
-}
-
 func main() {
 	// Flags, command line parameters
 	var cfgPathOpt = flag.String("config", "./untrak.yaml", "untrak Config Path")
@@ -57,7 +36,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	cfg.NonNamespaced = append(cfg.NonNamespaced, defaultNonNamespacedResources...)
+	cfg.NonNamespaced = append(cfg.NonNamespaced, kubernetes.DefaultNonNamespacedResources...)
 
 	wg.Add(1)
 	go func() {
