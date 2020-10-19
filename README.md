@@ -70,6 +70,14 @@ nonNamespaced:
 - some_crd_type
 ```
 
+You can use environment variables on command arguments (in/out):
+```yaml
+in:
+- cmd: "cat"
+  args: ["example/$SOME_FILE_NAME"]
+...
+```
+
 If you need to garbage collect them, you can change the output format to yaml and pipe the result in kubectl:
 
 ```

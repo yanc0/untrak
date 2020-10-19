@@ -19,6 +19,11 @@ out:
 # - cmd: "kubectl"
 #   args: ["get", "cm,deploy,svc,ing", "-o", "yaml", "-n", "api"]
 
+# You can use environment variables on command args
+# out:
+# - cmd: "cat"
+#   args: ["example/$SOME_FILE_NAME"]
+
 # You can exclude some resource type from the comparison
 exclude:
 - namespace
