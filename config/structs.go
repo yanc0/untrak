@@ -6,7 +6,8 @@ type CommandConfig struct {
 }
 
 type Config struct {
-	In     []*CommandConfig `yaml:"in"`
-	Out    []*CommandConfig `yaml:"out"`
-	Exclude []string         `yaml:"exclude"`
+	In            []*CommandConfig `yaml:"in"`
+	Out           []*CommandConfig `yaml:"out"`
+	Exclude       []string         `yaml:"exclude"`
+	NonNamespaced []string         `yaml:"nonNamespaced"`
 }

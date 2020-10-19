@@ -55,6 +55,29 @@ $ untrak -c untrak.yaml -o text
 - api/Ingress/my-ingress
 ```
 
+If your manifests have the namespace set to non-namespaced resource, untrak will skip the namespace. A list of supported non-namespaced resource types that will be skipped are defined by default. If you have installed more non-namespaced resource types (eg., `CRDs`), you could add extra resource types to skip namespace in comparison:
+```yaml
+# untrak.yaml
+## git sources
+in:
+...
+
+## cluster manifests
+out:
+...
+
+nonNamespaced:
+- some_crd_type
+```
+
+You can use environment variables on command arguments (in/out):
+```yaml
+in:
+- cmd: "cat"
+  args: ["example/$SOME_FILE_NAME"]
+...
+```
+
 If you need to garbage collect them, you can change the output format to yaml and pipe the result in kubectl:
 
 ```
@@ -63,4 +86,11 @@ configmap "django-config-b4k42gm792" deleted
 configmap "django-config-g55mctg456" deleted
 ingress.extensions "my-ingress" deleted
 ```
+
+If you want to fail on untracked resources (exit status 1), you can use `-fail=true`:
+
+```
+$ untrak -c untrak.yaml -fail=true
+```
+
 > **Caution**: please test this tool extensively before deleting resources. The software is provided "as is", without warranty of any kind.

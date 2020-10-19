@@ -22,6 +22,7 @@ func main() {
 	// Flags, command line parameters
 	var cfgPathOpt = flag.String("config", "./untrak.yaml", "untrak Config Path")
 	var outputOpt = flag.String("o", "text", "Output format")
+	var failOpt = flag.Bool("fail", false, "Fail on untracked resources")
 	flag.Parse()
 
 	var wg sync.WaitGroup
@@ -34,6 +35,8 @@ func main() {
 		log.Printf("[ERR] Cannot load %s file: %v\n", *cfgPathOpt, err)
 		os.Exit(1)
 	}
+
+	cfg.NonNamespaced = append(cfg.NonNamespaced, kubernetes.DefaultNonNamespacedResources...)
 
 	wg.Add(1)
 	go func() {
@@ -57,7 +60,7 @@ func main() {
 
 	wg.Wait()
 
-	untrackedResources := listUntrackedResources(resourcesIn, resourcesOut, cfg.Exclude)
+	untrackedResources := listUntrackedResources(resourcesIn, resourcesOut, cfg.Exclude, cfg.NonNamespaced)
 	switch {
 	case *outputOpt == "text":
 		outputs.Text(untrackedResources)
@@ -65,6 +68,10 @@ func main() {
 		outputs.YAML(untrackedResources)
 	default:
 		outputs.Text(untrackedResources)
+	}
+
+	if len(untrackedResources) > 0 && *failOpt {
+		os.Exit(1)
 	}
 }
 
@@ -79,6 +86,12 @@ func getKubernetesResources(cfgs []*config.CommandConfig) ([]*kubernetes.Resourc
 		wg.Add(1)
 		go func(cmd string, args ...string) {
 			defer wg.Done()
+
+			// substitute env variables if any has been set
+			for i, _ := range args {
+				args[i] = os.ExpandEnv(args[i])
+			}
+
 			c := exec.Command(cmd, args...)
 			var outb, errb bytes.Buffer
 			c.Stdout = &outb
@@ -122,7 +135,7 @@ func getKubernetesResources(cfgs []*config.CommandConfig) ([]*kubernetes.Resourc
 	return resources, nil
 }
 
-func listUntrackedResources(in []*kubernetes.Resource, out []*kubernetes.Resource, kindExclude []string) []*kubernetes.Resource {
+func listUntrackedResources(in []*kubernetes.Resource, out []*kubernetes.Resource, kindExclude []string, nonNamespaced []string) []*kubernetes.Resource {
 	var untrackedResources []*kubernetes.Resource
 	for _, resourceOut := range out {
 		// Resource is in the exlude list, skip it
@@ -131,6 +144,15 @@ func listUntrackedResources(in []*kubernetes.Resource, out []*kubernetes.Resourc
 		}
 		found := false
 		for _, resourceIn := range in {
+
+			// If input resource is not namespaced, compare only kind and Name
+			if utils.StringInListCaseInsensitive(nonNamespaced, resourceIn.Kind) {
+				if resourceOut.Kind == resourceIn.Kind && resourceOut.Metadata.Name == resourceIn.Metadata.Name {
+					found = true
+					break
+				}
+			}
+
 			// If resource has been found in both IN an OUT, there is nothing to do
 			if resourceOut.ID() == resourceIn.ID() {
 				found = true

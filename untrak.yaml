@@ -19,8 +19,19 @@ out:
 # - cmd: "kubectl"
 #   args: ["get", "cm,deploy,svc,ing", "-o", "yaml", "-n", "api"]
 
+# You can use environment variables on command args
+# out:
+# - cmd: "cat"
+#   args: ["example/$SOME_FILE_NAME"]
+
 # You can exclude some resource type from the comparison
 exclude:
 - namespace
 - secret
 - configmap
+
+# Declare non-namespaced resource types to be considered in resource comparison.
+# There are some defined resource types by default by default like namespace,
+# node, clusterrole, etc.
+# nonNamespaced:
+# - some_crd_type
