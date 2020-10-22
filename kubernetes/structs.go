@@ -7,7 +7,7 @@ import (
 // Metadata of kubernetes resource
 type Metadata struct {
 	Name      string `yaml:"name"`
-	Namespace string `yaml:"namespace"`
+	Namespace string `yaml:"namespace,omitempty"`
 }
 
 // Resource is a minimal description of a kubernetes object

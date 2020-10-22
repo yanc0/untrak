@@ -79,3 +79,8 @@ spec:
           serviceName: django
           servicePort: 80
         path: /
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: app

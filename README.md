@@ -87,10 +87,10 @@ configmap "django-config-g55mctg456" deleted
 ingress.extensions "my-ingress" deleted
 ```
 
-If you want to fail on untracked resources (exit status 1), you can use `-fail=true`:
+If you want to fail on untracked resources (exit status 1), you can use `-fail`:
 
 ```
-$ untrak -c untrak.yaml -fail=true
+$ untrak -c untrak.yaml -fail
 ```
 
 > **Caution**: please test this tool extensively before deleting resources. The software is provided "as is", without warranty of any kind.
